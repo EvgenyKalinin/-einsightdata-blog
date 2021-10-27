@@ -1,0 +1,46 @@
+{% load i18n wagtailimages_tags puput_tags %}
+
+    {% for entry in entries %}
+        {% if forloop.counter == 1 %}
+            <div class="carousel-item col-lg-6 active">
+        {% else %}
+            <div class="carousel-item col-lg-6">
+        {% endif %}
+            <div class="card">
+                <div class="image_header blog_page_image w-100" >
+                    {% if entry.header_image %}
+                    {% image entry.header_image fill-320x200 as header_image %}
+                    <img class="card-img-top img-fluid" alt="{{ entry.header_image.title }}" src="{{ header_image.url }}">
+                    <div class="date rounded">
+                        {{entry.date|date:"DATE_FORMAT"}}
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- END POST IMAGE -->
+                <!-- TAGS -->
+                <div class="card-text" >
+                    {% include 'puput/entry_tags.html' %}
+                </div>
+                <!-- TITLE -->
+                <div class="card-title">
+                    {% include 'puput/entry_page_header.html' %}
+                </div>
+                <!-- EXCERPT -->
+                <div class="excerpt card-text">
+                    {% if entry.excerpt %}
+                        {{ entry.excerpt|truncatewords_html:20|safe }}
+                    {% endif %}
+                </div>
+                <!-- END EXCERPT -->
+                <div class="card-footer" style="padding-left: 0px;padding-top: 0px;padding-bottom: 0px;padding-right: 0px;">
+                    {% include 'puput/author_links.html' %}
+                </div>
+            </div>
+        {% if forloop.counter == 1 %}
+            </div>
+        {% else %}
+            </div>
+        {% endif %}
+    {% empty %}
+        {% trans 'No entries yet' %}
+    {% endfor %}

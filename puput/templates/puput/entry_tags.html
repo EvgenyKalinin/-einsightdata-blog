@@ -1,0 +1,11 @@
+{% load wagtailroutablepage_tags puput_tags %}
+
+<section class="tag_list">
+	<span> Publications >
+    {% if entry.tags.count > 0 %}
+       {% tags_list blog_page.num_tags_entry_header entry.tags %}
+    {% else %}
+     no tag
+    {% endif %}
+	</span>
+</section>

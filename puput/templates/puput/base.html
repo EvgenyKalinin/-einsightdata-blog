@@ -1,0 +1,217 @@
+{% load static i18n wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags wagtailuserbar puput_tags  %}
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>
+        {% block title %}
+            {{ blog_page.title }}{% if blog_page.description %} | {{ blog_page.description }}{% endif %}
+        {% endblock title %}
+        </title>
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <meta name="title"
+        content="{% block meta_title %}
+            {% if blog_page.seo_title %}
+                {{ blog_page.seo_title }}
+            {% else %}
+                {{ blog_page.title }}
+            {% endif %}
+        {% endblock meta_title %}"/>
+        <meta name="description"
+        content="{% block meta_description %}
+            {{ blog_page.search_description }}
+        {% endblock meta_description %}"/>
+        <link rel="canonical" href="{% block canonical %}{% canonical_url %}{% endblock canonical %}"/>
+        <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+        <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+        <link href='//fonts.googleapis.com/css?family=Roboto:400,300,300italic,100italic,100,400italic,500,500italic,700,900,700italic,900italic' rel='stylesheet' type='text/css'>
+        <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;1,500&display=swap" rel="stylesheet">
+        {% block css %}
+            <style>
+            body {
+            --main-color: {{blog_page.main_color}};
+            }
+            </style>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+            <link rel='stylesheet' href="{% static 'puput/css/bootstrap.min.css' %}" type='text/css'/>
+            <link rel="stylesheet" href="{% static 'puput/css/font-awesome.min.css' %}">
+
+            <link rel="stylesheet" href="{% static 'puput/css/puput.css' %}"/>
+            <link href="{% static '/puput/css/style.css' %}" rel="stylesheet" type="text/css" />
+            <link href="{% static '/puput/css/BlogEmail.css' %}" rel="stylesheet" type="text/css" />
+            <link href="{% static '/puput/css/Footer.css' %}" rel="stylesheet" type="text/css" />
+            <link href="{% static '/puput/css/Mobile.css' %}" rel="stylesheet" type="text/css" />
+            <link rel="stylesheet" href="{% static 'puput/css/custom.css' %}"/>
+        {% endblock %}
+    </head>
+<body>
+    <!-- HEADER -->
+    <nav class="container row">
+        <div class="col-12 col-offset-sm-1 col-sm-10 d-sm-flex align-items-center align-middle navigation">
+            <div>
+                <img src="{% static 'images/logo.png'%}" class="float-left img-fluid">
+                <button class="navbar-toggler first-button d-sm-none" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+                <div class="animated-icon1">
+                    <span></span><span></span><span></span>
+                </div>
+                </button>
+            </div>
+            <div class="d-none d-sm-block">
+                <a href="#">About us <span class="sr-only">(current)</span></a>
+                <a href="/blog">Blog</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- END HEADER -->
+
+    <!-- Collapsible content -->
+    <div class="d-sm-none">
+        <div class="collapse navbar-collapse text-center " id="navbarSupportedContent">
+            <ul>
+                <li>
+                    <a class="nav-link" href="#">About us <span class="sr-only">(current)</span></a>
+                </li>
+                <li>
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Page Content  -->
+    <div id="content">
+        <!-- CONTENT -->
+        {% wagtailuserbar %}
+        <div class="container">
+            <div class="row">
+                {% block content %}{% endblock content %} {% block extra_content %}{% endblock extra_content %}
+            </div>
+        </div>
+    </div>
+        <!-- END CONTENT -->
+        <!-- Email -->
+    <section id="blog-email" class="blog-email post-email">
+        <div class="container blog-email-container">
+            <div class="blog-email-form">
+                <h3>Never miss an update from us by signing up to our newsletter</h3>
+                <p>
+                    Einsightdata blog is the collaboration hub, where the right people
+                    are always in the loop and key information is always at their
+                    fingertips.
+                </p>
+                <form>
+                    <div class="blog-input-container">
+                        <input placeholder="Your Email address" type="email" />
+                    </div>
+                    <button>Submit</button>
+                </form>
+            </div>
+            <div class="blog-email-icon">
+                <img src="{% static 'images/blog-email-icon.png'%}" />
+            </div>
+        </div>
+    </section>
+    <!-- -->
+    <!-- Footer -->
+    <footer>
+        <div class="footer-contact">
+            <div class="container footer-container">
+                <div class="footer-logo">
+                    <img src="{% static 'images/Logo.svg'%}"  />
+                </div>
+                <div class="footer-links">
+                    <a href="#!">About Us</a>
+                    <a href="#!">Blog</a>
+                    <a href="#!">Contact</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#!">Terms And Conditions</a>
+                    <a href="#!">Privacy Policy</a>
+                    <a href="#!">Cookie Policy</a>
+                </div>
+                <div class="info">
+                    <div class="info-container">
+                        <div class="info-icon">
+                            <img src="{% static 'images/icon/info-icon-1.png'%}" />
+                        </div>
+                        <p>21 Revolution Street Paris, France</p>
+                    </div>
+                    <div class="info-container">
+                        <div class="info-icon">
+                            <img src="{% static 'images/icon/info-icon-2.png'%}"  />
+                        </div>
+                        <p>+1 855 837374</p>
+                    </div>
+                    <div class="info-container">
+                        <div class="info-icon">
+                            <img src="{% static 'images/icon/info-icon-3.png'%}"  />
+                        </div>
+                        <p>support@company.com</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-social-media" style="padding-bottom: 20px">
+            <div class="social-media-container">
+                <img src="{% static 'images/icon/media-1.png'%}"  />
+                <img src="{% static 'images/icon/media-2.png'%}"  />
+                <img src="{% static 'images/icon/media-3.png'%}"  />
+                <img src="{% static 'images/icon/media-4.png'%}"  />
+            </div>
+            <small>Copyright &copy; Aldom Media LLP 2018-2020. All right reserved</small>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+
+    {% block js %}
+        <script src="{% static 'puput/js/jquery.min.js' %}"></script>
+        <script src="{% static 'puput/js/puput.js' %}"></script>
+        <!-- jQuery CDN - Slim version (=without AJAX) -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+        // Nav button
+        $(document).ready(function () {
+            $('.first-button').on('click', function () {
+                $('.animated-icon1').toggleClass('open');
+            });
+            $('.second-button').on('click', function () {
+                $('.animated-icon2').toggleClass('open');
+            });
+            $('.third-button').on('click', function () {
+                $('.animated-icon3').toggleClass('open');
+            });
+        });
+        // Slidebar
+        $(document).ready(function() {
+            $("#myCarousel").on("slide.bs.carousel", function(e) {
+                var $e = $(e.relatedTarget);
+                var idx = $e.index();
+                var itemsPerSlide = 2;
+                var totalItems = $("#myCarousel .carousel-item").length;
+                console.log(totalItems)
+                if (idx >= totalItems - (itemsPerSlide - 1)) {
+                    var it = itemsPerSlide - (totalItems - idx);
+                    for (var i = 0; i < it; i++) {
+                        // append slides to end
+                        if (e.direction == "left") {
+                            $(".carousel-item")
+                                .eq(i)
+                                .appendTo(".carousel-inner");
+                        } else {
+                            $(".carousel-item")
+                                .eq(0)
+                                .appendTo($(this).find(".carousel-inner"));
+                        }
+                    }
+                }
+            });
+        });
+        </script>
+    {% endblock js %}
+</body>
+</html>

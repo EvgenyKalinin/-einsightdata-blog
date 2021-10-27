@@ -1,0 +1,138 @@
+{% extends "puput/base.html" %}
+{% load static i18n wagtailcore_tags wagtailimages_tags puput_tags social_share %}
+{% block title %}
+    {% if search_term %}
+        {{ search_term }} | {{ blog_page.title }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock title %}
+{% block meta_title %}
+    {% if search_term %}
+        {% trans 'Entries for' %} {{ search_type }} {{ search_term }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+
+{% endblock meta_title %}
+{% block meta_description %}
+    {% if search_term %}
+        {% trans 'Entries for' %} {{ search_type }} {{ search_term }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock meta_description %}
+{% block social_share %}
+    {% image blog_page.header_image fill-800x450 as share_image %}
+    <meta property="og:title" content="{{ blog_page.title }}" />
+    <meta property="og:description" content="{{ blog_page.description }}" />
+    <meta property="og:url" content="{% canonical_url %}" />
+    {% if blog_page.header_image %}
+        <meta property="og:image" content="{% image_url share_image.url %}" />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="450" />
+        <meta name="twitter:image" content="{% image_url share_image.url %}" />
+    {% endif %}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ blog_page.title }}" />
+    <meta name="twitter:description" content="{{ blog_page.description }}" />
+{% endblock social_share %}
+{% block content %}
+<section class="col-offset-1 col-12 blog_page">
+    {% with per_page=blog_page.num_entries_page %}
+    {# 'paginate' tag cannot render dotted variables, so we need to create a context var #}
+    {% paginate per_page entries %}
+    {% if search_term %}
+        <div class="searchTerm">{% trans 'Entries for' %} {{ search_type }} "{{ search_term }}"</div>
+    {% endif %}
+        <!-- POSTS -->
+        {% for entry in entries %}
+        {% entry_url entry blog_page as post_url %}
+        {% if forloop.first %}
+        <!-- FIRST POST -->
+        <!-- TAGS -->
+        <div class="col-12">
+            {% include 'puput/entry_tags.html' %}
+        </div>
+        <article class="first_article" >
+            <div class="d-lg-flex">
+                <!-- TITLE -->
+                <div class="col-12 col-lg-6" style="position:relative; padding-bottom:55px;">
+                    <h1>
+                    <a href="{% entry_url entry blog_page %}">{{ entry.title }}</a>
+                    </h1>
+                    <!-- EXCERPT -->
+                    <div>
+                        {% if entry.excerpt %}
+                            {{ entry.excerpt|truncatewords_html:80|safe }}
+                        {% endif %}
+                    </div>
+                    <!-- AUTHOR -->
+                    <div class="author">
+                        {% include 'puput/author_links.html' %}
+                    </div>
+                </div>
+                <!-- POST IMAGE -->
+                <div class="col-12 col-lg-6 text-center pt-4 pt-lg-0" >
+                    {% if entry.header_image %}
+                        {% image entry.header_image original as header_image %}
+                        <img style="width: 100%; height: auto" alt="{{ entry.header_image.title }}" src="{{ header_image.url }}" >
+                    {% endif %}
+                    <div class="date rounded">
+                        {{entry.date|date:"DATE_FORMAT"}}
+                    </div>
+                </div>
+            </div>
+            <!-- END POST IMAGE -->
+        </article>
+        <!-- END FIRST POST -->
+        {% else %}
+        <!-- OTHER POSTS -->
+        <article class="align-items-center col-12 col-sm-6 col-lg-4" style="margin:20px 0px;">
+            <div class="card">
+                <!-- POST IMAGE -->
+                <div class="image_header blog_page_image w-100" >
+                    {% if entry.header_image %}
+                    {% image entry.header_image fill-320x200 as header_image %}
+                    <img class="card-img-top img-fluid" alt="{{ entry.header_image.title }}" src="{{ header_image.url }}">
+                    <div class="date rounded">
+                        {{entry.date|date:"DATE_FORMAT"}}
+                    </div>
+                    {% endif %}
+                </div>
+                <!-- END POST IMAGE -->
+                <!-- TAGS -->
+                <div class="card-text" >
+                    {% include 'puput/entry_tags.html' %}
+                </div>
+                <!-- TITLE -->
+                <div class="card-title">
+                    {% include 'puput/entry_page_header.html' %}
+                </div>
+                <!-- EXCERPT -->
+                <div class="excerpt card-text">
+                    {% if entry.excerpt %}
+                        {{ entry.excerpt|truncatewords_html:20|safe }}
+                    {% endif %}
+                </div>
+                <!-- END EXCERPT -->
+                <div class="card-footer" style="padding-left: 0px;padding-top: 0px;padding-bottom: 0px;padding-right: 0px;">
+                    {% include 'puput/author_links.html' %}
+                </div>
+            </div>
+        </article>
+        <!-- END OTHER POSTS -->
+        {% endif %}
+            {% empty %}
+            <span>{% trans 'No results found.' %}</span>
+        {% endfor %}
+        <!-- POSTS -->
+    <!-- PAGINATOR -->
+    <div class="pagination">
+        {% show_paginator %}
+    </div>
+    {% endwith %}
+</section>
+{% endblock content %}
+
+Due to the current Twitter Marketing trends prevailing on the platform, it’s imperative for marketers to personify their marketing approach that better appeals to the audience. Well, eInsightData simplifies this 

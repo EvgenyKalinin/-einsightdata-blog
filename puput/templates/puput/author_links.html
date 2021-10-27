@@ -1,0 +1,13 @@
+{% load wagtailroutablepage_tags puput_tags %}
+<section>
+    <a class="username" href="{% routablepageurl blog_page 'entries_by_author' entry.owner.username %}">
+        {% if request.user.wagtail_userprofile.avatar.url %}
+        <img class="avatar_image" src="{{ request.user.wagtail_userprofile.avatar.url }}">
+        {% endif %}
+        {% if entry.owner.first_name %}
+            {{ entry.owner.first_name }} {{ entry.owner.last_name }}
+        {% else %}
+            {{ entry.owner.username }}
+        {% endif %}
+    </a>
+</section>

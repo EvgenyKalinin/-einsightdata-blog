@@ -1,0 +1,113 @@
+{% extends "puput/base.html" %}
+{% load static i18n wagtailcore_tags wagtailimages_tags puput_tags social_share %}
+{% block title %}
+    {{ self.title }} | {{ blog_page.title }}
+{% endblock title %}
+{% block meta_title %}
+    {% if self.seo_title %}
+        {{ self.seo_title }}
+    {% else %}
+        {{ self.title }}
+    {% endif %}
+{% endblock meta_title %}
+{% block meta_description %}
+    {% if self.search_description %}
+        {{ self.search_description }}
+    {% else %}
+        {{ self.body|striptags|truncatewords:20 }}
+    {% endif %}
+{% endblock meta_description %}
+{% block canonical %}
+    {% canonical_url entry=self %}
+{% endblock canonical %}
+{% block social_share %}
+    {% image self.header_image fill-800x450 as share_image %}
+    <meta property="og:title" content="{{ self.title }}" />
+    <meta property="og:description" content="{% if self.excerpt %}{{ self.excerpt|striptags }}{% else %}{{ self.body|striptags|truncatewords:20 }}{% endif %}" />
+    <meta property="og:url" content="{% canonical_url entry=self %}" />
+    {% if self.header_image %}
+        <meta property="og:image" content="{% image_url share_image.url %}" />
+        <meta property="og:image:width" content="800" />
+        <meta property="og:image:height" content="450" />
+        <meta name="twitter:image" content="{% image_url share_image.url %}" />
+    {% endif %}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="{{ self.title }}" />
+        <meta name="twitter:description" content="{% if self.excerpt %}{{ self.excerpt|striptags }}{% else %}{{ self.body|striptags|truncatewords:20 }}{% endif %}" />
+{% endblock social_share %}
+{% block content %}
+<section>
+    <div class="d-none d-lg-block col-lg-1">
+        <div class="social-share">
+            <div class="circle">
+                {% post_to_facebook post_url '<span><i class="fa fa-facebook"></i></span>' %}
+            </div>
+            <div class="circle">
+                {% post_to_twitter entry.title post_url '<span><i class="fa fa-twitter"></i></span>' %}
+            </div>
+            <div class="circle">
+                {% post_to_linkendin post_url '<span><i class="fa fa-linkedin"></i></span>' %}
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-offset-1 col-lg-8 main">
+        <article class="box entry_page_content"
+        {% if self.id %}data-entry-page-update-comments-url="{% url 'entry_page_update_comments' self.id %}{% endif %}">
+        <div class="d-lg-none">
+            {% include 'puput/entry_tags.html' %}
+        </div>
+        <div class="img-fluid">
+            <div class="row">
+                <div class="col-12 col-lg-7">
+                    {% include 'puput/entry_page_header.html' with entry=self %}
+                    {{ self.excerpt|richtext }}
+                </div>
+                <!-- HEADER IMAGE -->
+                <div class="col-12 col-lg-5 img-fluid">
+                    {% if self.header_image %}
+                    {% image self.header_image original as header_image %}
+                        <img alt="{{ self.header_image.title }}" src="{{ header_image.url }}">
+                    {% endif %}
+                </div>
+                <!-- END HEADER IMAGE -->
+            </div>
+            <div class="post_body">
+                <!-- POST TEXT  -->
+                {{ self.body|richtext }}
+            </div>
+        </div>
+        {% show_comments %}
+        <!-- LAST ENTRIES  -->
+        {% if blog_page.display_last_entries %}
+            <h1 class="text-center">{% trans 'RELATED ARTICLES' %}</h1>
+            <div class="container-fluid d-none d-lg-block">
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner row w-100 mx-auto">
+                        {% recent_entries blog_page.num_last_entries %}
+                    </div>
+                    <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                        <img src="{% static 'images/icon/left-arrow.svg'%}" style="height:20px">
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                        <img src="{% static 'images/icon/right-arrow.svg'%}" style="height:20px">
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+            <div class="d-lg-none mobile_entries">
+                    {% recent_entries blog_page.num_last_entries %}
+            </div>
+        {% endif %}
+        <!-- END LAST ENTRIES  -->
+        </article>
+    </div>
+</section>
+
+{% endblock content %}
+{% block extra_content %}
+    {% if self.has_related %}
+        {% include 'puput/related_entries.html' with entry=self %}
+    {% endif %}
+{% endblock extra_content %}
+
